@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=
-            , initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" integrity="sha512-5PV92qsds/16vyYIJo3T/As4m2d8b6oWYfoqV+vtizRB6KhF1F9kYzWzQmsO6T3z3QG2Xdhrx7FQ+5R1LiQdUA==" crossorigin="anonymous"
         referrerpolicy="no-referrer" />
@@ -25,107 +24,60 @@
 
     <div class="container-fluid">
         <h1>Online Memo Wall</h1>
+
         <div class="row">
             <div class="col-xxl-3 col-xl-3 col-md-4 col-sm-6 form-out-box">
                 <div class="memo-box">
-                    <textarea class="memo-main"></textarea>
-                    <form method="POST" action="/">
+
+                    <form method="POST" action="/memo-formidable" enctype="multipart/form-data" id="memo-form">
+                        <textarea name="memoText" class="memo-main"></textarea>
                         <label for="file-upload" class="custom-file-upload">
-                                <i class="fa fa-cloud-upload"></i> Custom Upload
+                                <i class="fa fa-cloud-upload"></i> Image Upload
                             </label>
-                        <input id="file-upload" type="file" />
-                    </form>
-                    <form method="POST" action="/">
+                        <input id="file-upload" type="file" name="memoFile" />
+
                         <button class="memo-button">Submit</button>
                     </form>
-                    <form method="POST" action="/">
+
+
+                    <form method="POST" action="/admin" id="admin-form">
                         <div class="admin-txt">Administration</div>
-                        <input type="text" class="input-text" name="username" value="Username" onClick="this.select();">
-                        <input type="text" class="input-text" name="password" value="Password" onClick="this.select();">
+                        <input type="text" class="input-text" name="username" placeholder="Username" onClick="this.select();">
+                        <input type="text" class="input-text" name="password" placeholder="Password" onClick="this.select();">
                         <button class="button">Submit</button>
                         <!-- <a class="via" href="http://google.com">Login via
                                 Google</a> -->
                         <div id="my-signin2"></div>
                     </form>
+
+
                 </div>
             </div>
 
             <div class="col-xxl-9 col-xl-9 col-md-8 col-sm-6 memo-col">
-                <div class="row memo-row">
-                    <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6
+                <div class="row memo-row" id="memo-row">
+
+
+                    <!-- <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6
                             col-sm-12 col-6">
                         <div class="memo-box-none">
                             <div class="trash"><i class="bi bi-trash3"></i></div>
                             <div class="write"><i class="bi
                                         bi-pencil-square"></i></div>
+
                             <form method="post" action="">
-                                <textarea class="memo">🖐🏻☝🏻</textarea>
+
+                                <div class="memo"></div>
                             </form>
                         </div>
                     </div>
-
-                    <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6
-                            col-sm-12 col-6">
-                        <div class="memo-box-none">
-                            <div class="trash"><i class="bi bi-trash3"></i></div>
-                            <div class="write"><i class="bi
-                                        bi-pencil-square"></i></div>
-                            <form method="post" action="">
-                                <textarea class="memo"></textarea>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6
-                            col-sm-12 col-6">
-                        <div class="memo-box-none">
-                            <div class="trash"><i class="bi bi-trash3"></i></div>
-                            <div class="write"><i class="bi
-                                        bi-pencil-square"></i></div>
-                            <form method="post" action="">
-                                <textarea class="memo"></textarea>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6
-                            col-sm-12 col-6">
-                        <div class="memo-box-none">
-                            <div class="trash"><i class="bi bi-trash3"></i></div>
-                            <div class="write"><i class="bi
-                                        bi-pencil-square"></i></div>
-                            <form method="post" action="">
-                                <textarea class="memo"></textarea>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6
-                            col-sm-12 col-6">
-                        <div class="memo-box-none">
-                            <div class="trash"><i class="bi bi-trash3"></i></div>
-                            <div class="write"><i class="bi
-                                        bi-pencil-square"></i></div>
-                            <form method="post" action="">
-                                <textarea class="memo"></textarea>
-                            </form>
-                        </div>
-                    </div>
-
-
-
-
-
-
-
-
 
                 </div>
+            </div> -->
+                </div>
 
-
-
-
-
-
-
-
+            </div>
+            <div class="row footer">
 
 
             </div>
@@ -134,44 +86,36 @@
 
 
 
-        </div>
-
-    </div>
-    <div class="row footer">
-
-
-    </div>
 
 
 
+            <!-- <script>
+                function onSuccess(googleUser) {
+                    //console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+                    console.log('Logged in as: admin');
+                }
 
 
 
+                function onFailure(error) {
+                    console.log(error);
+                }
 
-
-    <script>
-        function onSuccess(googleUser) {
-            console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-        }
-
-        function onFailure(error) {
-            console.log(error);
-        }
-
-        function renderButton() {
-            gapi.signin2.render('my-signin2', {
-                'scope': 'profile email',
-                'width': 180,
-                'height': 35,
-                'longtitle': true,
-                'theme': 'light',
-                'onsuccess': onSuccess,
-                'onfailure': onFailure
-            });
-        }
-    </script>
-    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+                function renderButton() {
+                    gapi.signin2.render('my-signin2', {
+                        'scope': 'profile email',
+                        'width': 180,
+                        'height': 35,
+                        'longtitle': true,
+                        'theme': 'light',
+                        'onsuccess': onSuccess,
+                        'onfailure': onFailure
+                    });
+                }
+            </script> -->
+            <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+            <script src="index.js"></script>
 </body>
 
 

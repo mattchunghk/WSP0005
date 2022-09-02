@@ -33,6 +33,7 @@ h1 {
 }
 
 .memo {
+    padding-left: 6px;
     font-size: 1.5em;
     margin: 18px;
     height: 200px;
@@ -41,7 +42,13 @@ h1 {
     background-color: yellow;
     box-shadow: 10px 10px #888888cb;
     border-radius: 4px;
-    pointer-events: none
+    display: flex;
+    justify-content: flex-start;
+    align-content: space-between;
+}
+
+.photo-img {
+    width: 200px
 }
 
 .memo-main {
@@ -89,7 +96,10 @@ h1 {
         flex-direction: column;
     }
     .memo-box {
-        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
         background-color: #a1a1a7c9;
         margin: 20px;
         height: 580px;
@@ -126,6 +136,7 @@ input[type="file"] {
 }
 
 .custom-file-upload {
+    width: 170px;
     border: 1px solid #ccc;
     background-color: #FBFBFD;
     display: inline-block;
@@ -153,6 +164,11 @@ input[type="file"] {
     border: none;
     border-radius: 10px;
     text-align: center;
+}
+
+.input-text:focus {
+    color: #0c0c0ccb;
+    font-weight: bold;
 }
 
 .button {
