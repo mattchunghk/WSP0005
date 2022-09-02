@@ -42,9 +42,6 @@ h1 {
     background-color: yellow;
     box-shadow: 10px 10px #888888cb;
     border-radius: 4px;
-    display: flex;
-    justify-content: flex-start;
-    align-content: space-between;
 }
 
 .photo-img {
@@ -136,7 +133,7 @@ input[type="file"] {
 }
 
 .custom-file-upload {
-    width: 170px;
+    width: 177px;
     border: 1px solid #ccc;
     background-color: #FBFBFD;
     display: inline-block;
@@ -169,6 +166,26 @@ input[type="file"] {
 .input-text:focus {
     color: #0c0c0ccb;
     font-weight: bold;
+}
+
+.memo-input {
+    background-color: yellow;
+    height: 30px;
+    width: 180px;
+    margin: 25px 0px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2rem;
+}
+
+.memo-input:focus {
+    outline: none;
+}
+
+.photo-img {
+    margin: 0;
+    padding: 0;
+    max-width: 110px;
 }
 
 .button {
@@ -230,7 +247,7 @@ input[type="file"] {
 .trash {
     position: absolute;
     border-radius: 50%;
-    background-color: rgb(246, 245, 245);
+    background-color: rgb(219, 219, 219);
     padding: 5px 10px;
     left: 200px;
     top: 10px
@@ -243,7 +260,7 @@ input[type="file"] {
 .write {
     position: absolute;
     border-radius: 50%;
-    background-color: rgb(246, 245, 245);
+    background-color: rgb(219, 219, 219);
     padding: 5px 10px;
     left: 200px;
     top: 200px
@@ -251,4 +268,39 @@ input[type="file"] {
 
 .write:hover {
     background-color: rgb(230, 227, 227);
+}
+
+.like {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgb(219, 219, 219);
+    padding: 5px 10px;
+    left: 10px;
+    top: 200px
+}
+
+.like:hover {
+    background-color: rgb(230, 227, 227);
+}
+
+.count {
+    cursor: default;
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgb(219, 219, 219);
+    padding: 5px 13px;
+    left: 10px;
+    top: 10px
+}
+
+#admin-form {
+    position: relative;
+}
+
+#togglePassword {
+    position: absolute;
+    cursor: pointer;
+    margin-left: 100px;
+    top: 100px;
+    left: 79px
 }

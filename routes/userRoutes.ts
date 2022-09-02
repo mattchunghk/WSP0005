@@ -1,6 +1,8 @@
 import express from "express";
+import { Request, Response } from "express";
 import path from "path";
 import jsonfile from "jsonfile";
+import expressSession from "express-session";
 
 export const userRoutes = express.Router();
 userRoutes.use(express.urlencoded({ extended: true }));

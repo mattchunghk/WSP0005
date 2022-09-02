@@ -81,9 +81,10 @@ app.post("/memo-formidable", async (req, res) => {
     console.log({ obj });
     counter++;
     memos.push({
-      id: Date.now(),
+      id: `${Date.now()}${counter}`,
       content: obj["text"],
       image: obj["filename"],
+      like: [],
     });
     await jsonfile.writeFile(path.join(__dirname, "memo.json"), memos, {
       spaces: 3,
@@ -109,6 +110,34 @@ app.get("/memo", async (req, res) => {
   }
 });
 
+app.put("/admin/like", async (req: Request, res: Response) => {
+  const id: any = req.query.id;
+  try {
+    let likeItems = await jsonfile.readFileSync(
+      path.join(__dirname, "memo.json")
+    );
+
+    for (let i = 0; i < likeItems.length; i++) {
+      if (likeItems[i].id == parseInt(id)) {
+        if (!likeItems[i].like.includes(req.session.name)) {
+          likeItems[i].like.push(req.session.name);
+        } else {
+          let likeIndex = likeItems[i].like.indexOf(req.session.name);
+          likeItems[i].like.splice(likeIndex, 1);
+        }
+        break;
+      }
+    }
+
+    await jsonfile.writeFile(path.join(__dirname, "memo.json"), likeItems, {
+      spaces: 4,
+    });
+    res.json(likeItems);
+  } catch (error) {
+    res.status(401).send("Please Login");
+  }
+});
+
 //ex001
 
 let counter: number = 0;
@@ -130,26 +159,34 @@ const isLoggedInAPI = (
     next();
     return;
   }
-  res.status(401).redirect("/index.html");
+  res.status(401).send("Please Login");
+  //   res.status(401).redirect("/index.html");
   return;
 };
 
 app.put("/memo/update/", isLoggedInAPI, async (req: Request, res: Response) => {
   try {
-    const index: any = req.query.index;
+    const id: any = req.query.id;
     const updatedText: any = req.query.update;
 
     let updateItems = await jsonfile.readFileSync(
       path.join(__dirname, "memo.json")
     );
-    updateItems[parseInt(index)].content = updatedText;
+    // console.log(parseInt(id));
+    // updateItems[id].content = updatedText;
+    for (let i = 0; i < updateItems.length; i++) {
+      if (updateItems[i].id == parseInt(id)) {
+        updateItems[i].content = updatedText;
+        break;
+      }
+    }
 
     await jsonfile.writeFile(path.join(__dirname, "memo.json"), updateItems, {
       spaces: 2,
     });
     res.json(updateItems);
   } catch (error) {
-    res.send("Please Login");
+    res.status(401).send("Please Login");
   }
 });
 
@@ -177,6 +214,19 @@ app.delete(
 );
 
 //ex002
+app.get("/admin", async (req, res) => {
+  try {
+    const memos: any[] = await jsonfile.readFile(
+      path.join(__dirname, "users.json")
+    );
+    res.status(200).json(memos);
+    return;
+  } catch (err) {
+    res.status(400).send(err);
+    return;
+  }
+});
+
 app.post("/admin", async (req: Request, res: Response) => {
   let admins = await jsonfile.readFileSync(path.join(__dirname, "users.json"));
   for (let admin of admins) {
@@ -193,13 +243,13 @@ app.post("/admin", async (req: Request, res: Response) => {
   }
   req.session.name = "";
   req.session.isLoggedIn = false;
-
-  res.status(401).redirect("/index.html?msg=Login%20failed");
+  res.status(401).send("Please Login");
+  //   res.status(401).redirect("/index.html?msg=Login%20failed");
 });
 
-app.get("/admin", (req: Request, res: Response) => {
-  res.sendFile(path.resolve("public", "index.html"));
-});
+// app.get("/admin", (req: Request, res: Response) => {
+//   res.sendFile(path.resolve("public", "index.html"));
+// });
 
 const PORT = 8080;
 
@@ -216,7 +266,8 @@ const isLoggedIn = (
     next();
     return;
   }
-  res.status(401).redirect("/index.html");
+  res.status(401).end("Please Login");
+  //   res.status(401).redirect("/index.html");
   return;
 };
 app.use(isLoggedIn, express.static("protected"));

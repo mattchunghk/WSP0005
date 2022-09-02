@@ -43,7 +43,8 @@
                     <form method="POST" action="/admin" id="admin-form">
                         <div class="admin-txt">Administration</div>
                         <input type="text" class="input-text" name="username" placeholder="Username" onClick="this.select();">
-                        <input type="text" class="input-text" name="password" placeholder="Password" onClick="this.select();">
+                        <input type="password" class="input-text" id="password-text" name="password" placeholder="Password" onClick="this.select();">
+                        <i class="far fa-eye" id="togglePassword"></i>
                         <button class="button">Submit</button>
                         <!-- <a class="via" href="http://google.com">Login via
                                 Google</a> -->
@@ -58,29 +59,30 @@
                 <div class="row memo-row" id="memo-row">
 
 
-                    <!-- <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6
+                    <!-- <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
                             col-sm-12 col-6">
                         <div class="memo-box-none">
                             <div class="trash"><i class="bi bi-trash3"></i></div>
                             <div class="write"><i class="bi
                                         bi-pencil-square"></i></div>
-
+                            <div class="like"><i class="bi
+                                        bi-hand-thumbs-up"></i></div>
+                            <div class="count">0</div>
                             <form method="post" action="">
 
-                                <div class="memo"></div>
+                                <div class="memo">
+                                    <input type="text" class="memo-input" value="${memo.content}">
+                                    <img class="photo-img" src="/uploads/memoFile-1662123888895-5.png" alt="memo-phot">
+                                </div>
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div> -->
-                </div>
-
-            </div>
-            <div class="row footer">
+                    <div class="row footer">
 
 
-            </div>
+                    </div>
 
 
 
@@ -89,33 +91,33 @@
 
 
 
-            <!-- <script>
-                function onSuccess(googleUser) {
-                    //console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-                    console.log('Logged in as: admin');
-                }
+                    <script>
+                        function onSuccess(googleUser) {
+                            //console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+                            console.log('Logged in as: admin');
+                        }
 
 
 
-                function onFailure(error) {
-                    console.log(error);
-                }
+                        function onFailure(error) {
+                            console.log(error);
+                        }
 
-                function renderButton() {
-                    gapi.signin2.render('my-signin2', {
-                        'scope': 'profile email',
-                        'width': 180,
-                        'height': 35,
-                        'longtitle': true,
-                        'theme': 'light',
-                        'onsuccess': onSuccess,
-                        'onfailure': onFailure
-                    });
-                }
-            </script> -->
-            <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-            <script src="index.js"></script>
+                        function renderButton() {
+                            gapi.signin2.render('my-signin2', {
+                                'scope': 'profile email',
+                                'width': 180,
+                                'height': 35,
+                                'longtitle': true,
+                                'theme': 'light',
+                                'onsuccess': onSuccess,
+                                'onfailure': onFailure
+                            });
+                        }
+                    </script>
+                    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+                    <script src="index.js"></script>
 </body>
 
 

@@ -1,9 +1,16 @@
 [{
+        "userId": "0001",
+        "username": "Matt",
+        "password": "matt"
+    },
+    {
+        "userId": "0002",
         "username": "admin",
         "password": "admin"
     },
     {
-        "username": "admin2",
-        "password": "admin2"
+        "userId": "0003",
+        "username": "hk",
+        "password": "hk"
     }
 ]
