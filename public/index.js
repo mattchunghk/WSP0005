@@ -1,33 +1,26 @@
 console.log("js running");
 window.onload = () => {
-
-    init()
+    init();
 };
 
 function init() {
     loadMemos();
     document
-        .querySelector('#memo-form')
-        .addEventListener('submit', submitMemoForm)
-    document
-        .querySelector('#admin-form')
-        .addEventListener('submit', login)
-
-
+        .querySelector("#memo-form")
+        .addEventListener("submit", submitMemoForm);
+    document.querySelector("#admin-form").addEventListener("submit", login);
+    document.querySelector("#admin-logout").addEventListener("submit", logout);
 }
 
-
-
 async function loadMemos() {
-    const res = await fetch('/memo'); // Fetch from the correct url
+    const res = await fetch("/memo"); // Fetch from the correct url
     const memos = await res.json();
-    const memosContainer = document.querySelector('#memo-row');
-    const adminText = document.querySelector('.admin-txt')
+    const memosContainer = document.querySelector("#memo-row");
+    const adminText = document.querySelector(".admin-txt");
 
     if (res.ok) {
-        memosContainer.innerHTML = ''
+        memosContainer.innerHTML = "";
         for (let memo of memos) {
-
             if (memo.image == "None") {
                 memosContainer.innerHTML += `
             <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
@@ -48,8 +41,7 @@ async function loadMemos() {
         </div>
     </div>
 </div>
-</div>`
-
+</div>`;
             } else {
                 memosContainer.innerHTML += `
                 <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
@@ -71,14 +63,10 @@ async function loadMemos() {
             </div>
         </div>
     </div>
-    </div>`
-
+    </div>`;
             }
 
-
-
-
-            //             ` 
+            //             `
             //             <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
             //             col-sm-12 col-6">
             //         <div class="memo-box-none">
@@ -94,84 +82,91 @@ async function loadMemos() {
             // `
         }
 
-
-
-
-
-        const memoDivs = [...document.querySelectorAll('.memo-box-none')];
+        const memoDivs = [...document.querySelectorAll(".memo-box-none")];
         for (let index in memoDivs) {
-            const memoDiv = memoDivs[index]
+            const memoDiv = memoDivs[index];
 
-            memoDiv.querySelector('.trash').addEventListener('click', async(event) => {
-                // Do your fetch  logic here
-                const res = await fetch(`/admin/delete/id/${memos[index].id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+            memoDiv
+                .querySelector(".trash")
+                .addEventListener("click", async(event) => {
+                    // Do your fetch  logic here
+                    const res = await fetch(`/admin/delete/id/${memos[index].id}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    // console.log(res);
+                    if (res.ok) {
+                        // memoDiv.querySelector('.count').innerHTML = memos[index].like.length;
+                        adminText.style.color = "Black";
+                        loadMemos();
+                    } else {
+                        adminText.innerHTML = `Please Login!`;
+                        adminText.style.color = "Red";
+                        setTimeout(function() {
+                            adminText.innerHTML = `Administration`;
+                            adminText.style.color = "Black";
+                        }, 2000)
+                    }
+
+                    // loadMemos();
                 });
-                // console.log(res);
-                if (res.ok) {
-                    // memoDiv.querySelector('.count').innerHTML = memos[index].like.length;
-                    adminText.style.color = 'Black'
-                    loadMemos()
-                } else {
-                    adminText.innerHTML = `Please Login!`
-                    adminText.style.color = 'Red'
 
-                }
-                // loadMemos();
-            });
+            memoDiv
+                .querySelector(".write")
+                .addEventListener("click", async(event) => {
+                    // Do your fetch  logic here
+                    let text = memoDiv.querySelector(".memo-input").value;
+                    console.log(memos[index]);
+                    const res = await fetch(
+                        `/admin/update/?id=${memos[index].id}&update=${text}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                        }
+                    );
+                    // console.log(res);
+                    if (res.ok) {
+                        adminText.style.color = "Black";
+                        loadMemos();
+                    } else {
+                        adminText.innerHTML = `Please Login!`;
+                        adminText.style.color = "Red";
+                        setTimeout(function() {
+                            adminText.innerHTML = `Administration`;
+                            adminText.style.color = "Black";
+                        }, 2000)
+                    }
 
-            memoDiv.querySelector('.write').addEventListener('click', async(event) => {
-                // Do your fetch  logic here
-                let text = memoDiv.querySelector('.memo-input').value
-                console.log(memos[index]);
-                const res = await fetch(`/admin/update/?id=${memos[index].id}&update=${text}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    // loadMemos();
                 });
-                // console.log(res);
-                if (res.ok) {
-                    adminText.style.color = 'Black'
-                    loadMemos()
-                } else {
-                    adminText.innerHTML = `Please Login!`
-                    adminText.style.color = 'Red'
 
-                }
-                // loadMemos();
+            memoDiv
+                .querySelector(".like")
+                .addEventListener("click", async(event) => {
+                    // Do your fetch  logic here
 
-            });
+                    const res = await fetch(`/admin/like/?id=${memos[index].id}`, {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    });
+                    if (res.ok) {
+                        adminText.style.color = "Black";
+                        loadMemos();
+                    } else {
+                        adminText.innerHTML = `Please Login!`;
+                        adminText.style.color = "Red";
+                        setTimeout(function() {
+                            adminText.innerHTML = `Administration`;
+                            adminText.style.color = "Black";
+                        }, 2000)
+                    }
 
-            memoDiv.querySelector('.like').addEventListener('click', async(event) => {
-                // Do your fetch  logic here
-
-                const res = await fetch(`/admin/like/?id=${memos[index].id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
                 });
-                if (res.ok) {
-                    adminText.style.color = 'Black'
-                    loadMemos()
-                } else {
-                    adminText.innerHTML = `Please Login!`
-                    adminText.style.color = 'Red'
-
-                }
-
-            });
-
-
-
-
-
-
-
         }
     }
 
@@ -182,74 +177,87 @@ async function loadMemos() {
     // loadMemos();
 }
 
-
-
-
-
 async function submitMemoForm(event) {
-    event.preventDefault()
+    event.preventDefault();
 
     // Serialize the Form afterwards
-    const form = event.target
-    const formData = new FormData()
+    const form = event.target;
+    const formData = new FormData();
 
-    formData.append('memoText', form.memoText.value)
-    formData.append('memoFile', form.memoFile.files[0])
+    formData.append("memoText", form.memoText.value);
+    formData.append("memoFile", form.memoFile.files[0]);
 
-    const res = await fetch('/memo/memo-formidable', {
-        method: 'POST',
+    const res = await fetch("/memo/memo-formidable", {
+        method: "POST",
         body: formData,
-    })
+    });
 
     if (res.ok) {
-        document.querySelector('#memo-form').reset()
-        loadMemos()
-
+        document.querySelector("#memo-form").reset();
+        loadMemos();
     }
-
 }
 
-
-
 async function login(event) {
-
-    event.preventDefault()
+    event.preventDefault();
 
     // Serialize the Form afterwards
-    const form = event.target
-    const formObject = {}
-    const adminText = document.querySelector('.admin-txt')
-    formObject['username'] = form.username.value
-    formObject['password'] = form.password.value
-    const res = await fetch('/admin/login', {
-        method: 'POST',
+    const form = event.target;
+    const formObject = {};
+    const adminText = document.querySelector(".admin-txt");
+    formObject["username"] = form.username.value;
+    formObject["password"] = form.password.value;
+    const res = await fetch("/admin/login", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(formObject),
-    })
+    });
     if (res.ok) {
-
-        adminText.style.color = 'Black'
-        adminText.innerHTML = `Hi, ${form.username.value}!`
-        form.username.value = ""
-        form.password.value = ""
+        adminText.style.color = "Black";
+        adminText.innerHTML = `Hi, ${form.username.value}!`;
+        form.username.value = "";
+        form.password.value = "";
     } else {
-        adminText.innerHTML = `Incorrect!`
+        adminText.innerHTML = `Incorrect!`;
+    }
+
+
+    // window.location = '/admin.html'
+}
+
+async function logout(event) {
+    event.preventDefault();
+    const adminText = document.querySelector(".admin-txt");
+
+    const res = await fetch("/logout", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+
+    });
+    if (res.ok) {
+        adminText.style.color = "Black";
+        adminText.innerHTML = `Logged Out`;
+        setTimeout(function() {
+            adminText.innerHTML = `Administration`;
+            adminText.style.color = "Black";
+        }, 3000)
     }
 
     // window.location = '/admin.html'
-
-
 }
 
-const togglePassword = document.querySelector('#togglePassword');
-const password = document.querySelector('#password-text');
+const togglePassword = document.querySelector("#togglePassword");
+const password = document.querySelector("#password-text");
 
-togglePassword.addEventListener('click', function(e) {
+togglePassword.addEventListener("click", function(e) {
     // toggle the type attribute
-    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-    password.setAttribute('type', type);
+    const type =
+        password.getAttribute("type") === "password" ? "text" : "password";
+    password.setAttribute("type", type);
     // toggle the eye slash icon
-    this.classList.toggle('fa-eye-slash');
+    this.classList.toggle("fa-eye-slash");
 });

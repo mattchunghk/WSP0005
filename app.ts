@@ -37,6 +37,16 @@ app.use("/memo", memoRoutes);
 
 fs.mkdirSync(uploadDir, { recursive: true });
 
+app.post("/logout", function (req, res) {
+  try {
+    req.session.name = "";
+    req.session.isLoggedIn = false;
+    res.send("log Out Success!");
+  } catch (err) {
+    res.status(400).send("logout error");
+  }
+});
+
 //ex001
 let counter: number = 0;
 app.use((req: Request, res: Response, next) => {

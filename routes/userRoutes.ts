@@ -41,11 +41,16 @@ userRoutes.delete(
     //   deletedItems.filter((item: any) => item.id != parseInt(id));
     for (let i = 0; i < deletedItems.length; i++) {
       if (deletedItems[i].id == parseInt(id)) {
-        fs.unlink(`./uploads/${deletedItems[i].image}`, function (err) {
-          if (err) throw err;
-          console.log("File deleted!");
-        });
-        deletedItems.splice(i, 1);
+        if (deletedItems[i].image == "None") {
+          deletedItems.splice(i, 1);
+        } else {
+          fs.unlink(`./uploads/${deletedItems[i].image}`, function (err) {
+            if (err) throw err;
+            console.log("File deleted!");
+          });
+          deletedItems.splice(i, 1);
+        }
+
         break;
       }
     }

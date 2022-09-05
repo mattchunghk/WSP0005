@@ -36,7 +36,6 @@ export const formParse = (req: express.Request) => {
       } else {
         filename = "None";
       }
-      console.log(files);
       resolve({
         filename,
         text,
