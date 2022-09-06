@@ -1,3 +1,18 @@
 {
-  "cSpell.words": ["Divs", "resave"]
+  "cSpell.words": [
+    "Divs",
+    "resave"
+  ],
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "memo-wall",
+      "database": "memo-wall",
+      "username": "memoadmin",
+      "password": "memoadmin"
+    }
+  ]
 }

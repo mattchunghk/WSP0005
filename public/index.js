@@ -1,3 +1,4 @@
+// import { io } from '../app'
 console.log("js running");
 window.onload = () => {
     init();
@@ -12,17 +13,30 @@ function init() {
     document.querySelector("#admin-logout").addEventListener("submit", logout);
 }
 
+
+const socket = io.connect();
+socket.on("memoUpdated", () => {
+    console.log("io good");
+    loadMemos();
+})
+
+
+
 async function loadMemos() {
+
+
+
     const res = await fetch("/memo"); // Fetch from the correct url
     const memos = await res.json();
     const memosContainer = document.querySelector("#memo-row");
     const adminText = document.querySelector(".admin-txt");
-
+    console.log(memos);
     if (res.ok) {
         memosContainer.innerHTML = "";
+
         for (let memo of memos) {
-            if (memo.image == "None") {
-                memosContainer.innerHTML += `
+
+            memosContainer.innerHTML += `
             <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
             col-sm-12 col-6">
         <div class="memo-box-none">
@@ -31,55 +45,20 @@ async function loadMemos() {
                         bi-pencil-square"></i></div>
             <div class="like"><i class="bi
                         bi-hand-thumbs-up"></i></div>
-            <div class="count">${memo.like.length}</div>
+                        ${memo.likes_num == null? `<div class="count">0</div>` :`<div class="count">${memo.likes_num}</div>` }
+                        
             <form method="post" action="">
 
                 <div class="memo">
                     <input type="text" class="memo-input" value="${memo.content}" onClick="this.select()">
+                ${memo.image == "None"? "" :`<img class="photo-img" src="/${memo.image}" alt="memo-phot">`}
                 </div>
             </form>
         </div>
     </div>
 </div>
 </div>`;
-            } else {
-                memosContainer.innerHTML += `
-                <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
-                col-sm-12 col-6">
-            <div class="memo-box-none">
-                <div class="trash"><i class="bi bi-trash3"></i></div>
-                <div class="write"><i class="bi
-                            bi-pencil-square"></i></div>
-                <div class="like"><i class="bi
-                            bi-hand-thumbs-up"></i></div>
-                <div class="count">${memo.like.length}</div>
-                <form method="post" action="">
-    
-                    <div class="memo">
-                        <input type="text" class="memo-input" value="${memo.content}" onClick="this.select()">
-                        <img class="photo-img" src="/${memo.image}" alt="memo-phot">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    </div>`;
-            }
-
-            //             `
-            //             <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
-            //             col-sm-12 col-6">
-            //         <div class="memo-box-none">
-            //             <div class="trash"><i class="bi bi-trash3"></i></div>
-            //             <div class="write"><i class="bi bi-pencil-square"></i></div>
-            //             <div class="trash"><i class="bi bi-hand-thumbs-up"></i></div>
-            //             <form method="post" action="">
-
-            //                 <textarea class="memo">${memo.content}</textarea>
-            //             </form>
-            //         </div>
-            //     </div>
-            // `
+            
         }
 
         const memoDivs = [...document.querySelectorAll(".memo-box-none")];
@@ -261,3 +240,28 @@ togglePassword.addEventListener("click", function(e) {
     // toggle the eye slash icon
     this.classList.toggle("fa-eye-slash");
 });
+
+
+// else {
+//     memosContainer.innerHTML += `
+//     <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
+//     col-sm-12 col-6">
+// <div class="memo-box-none">
+//     <div class="trash"><i class="bi bi-trash3"></i></div>
+//     <div class="write"><i class="bi
+//                 bi-pencil-square"></i></div>
+//     <div class="like"><i class="bi
+//                 bi-hand-thumbs-up"></i></div>
+
+//     <form method="post" action="">
+
+//         <div class="memo">
+//             <input type="text" class="memo-input" value="${memo.content}" onClick="this.select()">
+//             <img class="photo-img" src="/${memo.image}" alt="memo-phot">
+//         </div>
+//     </form>
+// </div>
+// </div>
+// </div>
+// </div>`;
+// }
