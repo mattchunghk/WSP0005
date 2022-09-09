@@ -1,36 +1,76 @@
 import express from 'express'
 import { Request, Response } from 'express'
-import path from 'path'
-import jsonfile from 'jsonfile'
+// import path from 'path'
+// import jsonfile from 'jsonfile'
 import { isLoggedIn } from '../isLoggedIn'
 import { client, io } from '../app'
 import fs from 'fs'
+import { checkPassword, hashPassword } from './hash'
+import fetch from 'cross-fetch'
+import crypto from 'crypto'
+import { fileFrom } from 'node-fetch'
+import { setDefaultResultOrder } from 'dns'
 
 export const userRoutes = express.Router()
+userRoutes.post('/login', login)
+userRoutes.get('/login/google', loginGoogle)
+userRoutes.get('/logout', logout)
 
-userRoutes.post('/login', async (req: Request, res: Response) => {
-	const admins = await client.query('SELECT * from users')
+async function login(req: Request, res: Response) {
+	const { username, password } = req.body
 
-	for (let admin of admins.rows) {
-		if (
-			req.body.username === admin.username &&
-			req.body.password === admin.password
-		) {
-			req.session.name = admin.username
-			req.session.isLoggedIn = true
-			req.session.useId = admin.id
-			//   res.status(200).redirect("/admin.html");
-			res.send('success')
-
-			return
-		}
+	const users = (
+		await client.query(`SELECT * FROM users WHERE users.username = $1`, [
+			username
+		])
+	).rows
+	const user = users[0]
+	if (!user) {
+		return res.status(401).redirect('/login.html?error=Incorrect+Username')
 	}
-	req.session.name = ''
-	req.session.isLoggedIn = false
-	res.status(401).send('Please Login')
 
-	//   res.status(401).redirect("/index.html?msg=Login%20failed");
+	const match = await checkPassword(password, user.password)
+	if (match) {
+		if (req.session) {
+			req.session.name = user.username
+			req.session.isLoggedIn = true
+			req.session.useId = user.id
+
+			// req.session['user'] = {
+			// 	id: user.id
+			// }
+		}
+		return res.redirect('/') // To the protected page.
+	} else {
+		return res.status(401).redirect('/login.html?error=Incorrect+Username')
+	}
+}
+
+userRoutes.post('/users', async (req, res) => {
+	const { username, password } = req.body
+	let hashedPassword = await hashPassword(password)
+	console.log(hashedPassword)
+
+	await client.query(`INSERT INTO users (username,password) VALUES ($1,$2)`, [
+		username,
+		hashedPassword
+	])
+	res.json({ success: true })
 })
+
+async function logout(req: Request, res: Response) {
+	try {
+		req.session.destroy(() => {
+			console.log('User logged out')
+		})
+		req.session.name = ''
+		req.session.isLoggedIn = false
+		req.session.useId = ''
+		res.status(200).json({ message: 'User logged Out Success!' })
+	} catch (err) {
+		res.status(400).send('logout error')
+	}
+}
 
 userRoutes.delete(
 	'/delete/id/:id',
@@ -110,33 +150,56 @@ userRoutes.put('/update/', isLoggedIn, async (req: Request, res: Response) => {
 	}
 })
 
-// userRoutes.put('/like', isLoggedIn, async (req: Request, res: Response) => {
-// 	const id: any = req.query.id
-// 	try {
-// 		let likeItems = await jsonfile.readFileSync(
-// 			path.join(__dirname, '../memo.json')
-// 		)
+async function loginGoogle(req: express.Request, res: express.Response) {
+	try {
+		const accessToken = (req.session?.grant as any).response.access_token
+		const fetchRes = await fetch(
+			'https://www.googleapis.com/oauth2/v2/userinfo',
+			{
+				method: 'get',
+				headers: {
+					Authorization: `Bearer ${accessToken}`
+				}
+			}
+		)
 
-// 		likeItems
-// 			.filter((likeItem: { id: number }) => likeItem.id == parseInt(id))
-// 			.map((likeItem: { like: Array<any> }) =>
-// 				!likeItem.like.includes(req.session.name)
-// 					? likeItem.like.push(req.session.name)
-// 					: likeItem.like.splice(
-// 							likeItem.like.indexOf(req.session.name),
-// 							1
-// 					  )
-// 			)
+		const result = await fetchRes.json()
+		console.log(result)
 
-// 		await jsonfile.writeFile(
-// 			path.join(__dirname, '../memo.json'),
-// 			likeItems,
-// 			{
-// 				spaces: 4
-// 			}
-// 		)
-// 		res.json(likeItems)
-// 	} catch (error) {
-// 		res.status(401).send('Please Login')
-// 	}
-// })
+		const users = (
+			await client.query(
+				`SELECT * FROM users WHERE users.username = $1`,
+				[result.email]
+			)
+		).rows
+		let user = users[0]
+		if (!user) {
+			//create a 32bit crypto password
+
+			console.log(user)
+			let password = await hashPassword(result.email)
+			console.log(password)
+			user = (
+				await client.query(
+					`INSERT INTO users (username,password)
+	            VALUES ($1,$2) RETURNING *`,
+					[result.email, password]
+				)
+			).rows[0]
+		}
+		if (req.session) {
+			req.session.name = user.username
+			req.session.isLoggedIn = true
+			req.session.useId = user.id
+			req.session['user'] = result
+		}
+		return res.redirect('/')
+	} catch (error) {
+		res.status(401).send('Invalid credentials')
+	}
+}
+
+userRoutes.get('/me', getMe)
+async function getMe(req: express.Request, res: express.Response) {
+	res.status(200).json(req.session)
+}

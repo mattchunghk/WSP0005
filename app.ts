@@ -9,6 +9,7 @@ import pg from 'pg'
 import dotenv from 'dotenv'
 import http from 'http'
 import { Server as SocketIO } from 'socket.io'
+import grant from 'grant'
 
 import { userRoutes } from './routes/userRoutes'
 import { memoRoutes } from './routes/memoRoutes'
@@ -37,30 +38,39 @@ declare module 'express-session' {
 		counter?: number
 		name?: string
 		isLoggedIn?: Boolean
-		useId?: number
+		useId?: any
+		grant?: any
+		user: any
 	}
 }
 dotenv.config()
+
 export const client = new pg.Client({
 	database: process.env.DB_NAME,
 	user: process.env.DB_USERNAME,
 	password: process.env.DB_PASSWORD
 })
 
+const grantExpress = grant.express({
+	defaults: {
+		origin: 'http://localhost:8080',
+		transport: 'session',
+		state: true
+	},
+	google: {
+		key: process.env.GOOGLE_CLIENT_ID || '',
+		secret: process.env.GOOGLE_CLIENT_SECRET || '',
+		scope: ['profile', 'email'],
+		callback: '/admin/login/google'
+	}
+})
+
+app.use(grantExpress as express.RequestHandler)
+
 app.use('/admin', userRoutes)
 app.use('/memo', memoRoutes)
 
 fs.mkdirSync(uploadDir, { recursive: true })
-
-app.post('/logout', function (req, res) {
-	try {
-		req.session.name = ''
-		req.session.isLoggedIn = false
-		res.send('log Out Success!')
-	} catch (err) {
-		res.status(400).send('logout error')
-	}
-})
 
 //ex001
 let counter: number = 0

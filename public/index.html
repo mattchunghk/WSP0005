@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <meta name="google-signin-client_id" content="YOUR_CLIENT_ID.apps.googleusercontent.com"> -->
+    <meta name="google-signin-client_id" content="758390979386-l3a4hrab2krjdsfe5vqsa8b4a3oh3dl2.apps.googleusercontent.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.9.1/font/bootstrap-icons.min.css" integrity="sha512-5PV92qsds/16vyYIJo3T/As4m2d8b6oWYfoqV+vtizRB6KhF1F9kYzWzQmsO6T3z3QG2Xdhrx7FQ+5R1LiQdUA==" crossorigin="anonymous"
         referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" integrity="sha512-1sCRPdkRXhBV2PBLUdRb4tMg1w2YPf37qatUFeS7zlBy7jJI8Lf4VHwWfZZfpXtYSLy85pkm9GaYVYMfw5BC1A==" crossorigin="anonymous" referrerpolicy="no-referrer"
@@ -46,43 +46,22 @@
                         <input type="password" class="input-text" id="password-text" name="password" placeholder="Password" onClick="this.select();">
                         <i class="far fa-eye" id="togglePassword"></i>
                         <button class="button">Submit</button>
-                        <!-- <a class="via" href="http://google.com">Login via
-                                Google</a> -->
-                        <div id="my-signin2"></div>
+
+                        <a href="/connect/google" class="btn btn-success">Sign
+                                in With Google</a>
+                        <!-- <div id="my-signin2" href="/connect/google"></div> -->
                     </form>
 
-                    <form method="POST" action="/admin" id="admin-logout">
-                        <button class="button loggout-button">Log Out</button>
+                    <form method="POST" action="/admin/logout" id="admin-logout">
+                        <button class="button loggout-button" onclick="load()">Log Out</button>
                     </form>
-
-
+                    <div id="googleMap" style="width:100%;height:400px;"></div>
                 </div>
             </div>
 
             <div class="col-xxl-9 col-xl-9 col-md-8 col-sm-6 memo-col">
                 <div class="row memo-row" id="memo-row">
 
-
-                    <!-- <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
-                            col-sm-12 col-6">
-                        <div class="memo-box-none">
-                            <div class="trash"><i class="bi bi-trash3"></i></div>
-                            <div class="write"><i class="bi
-                                        bi-pencil-square"></i></div>
-                            <div class="like"><i class="bi
-                                        bi-hand-thumbs-up"></i></div>
-                            <div class="count">0</div>
-                            <form method="post" action="">
-
-                                <div class="memo">
-                                    <input type="text" class="memo-input" value="${memo.content}">
-                                    <img class="photo-img" src="/uploads/memoFile-1662123888895-5.png" alt="memo-phot">
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
                     <div class="row footer">
 
 
@@ -90,19 +69,21 @@
 
 
 
-
-
-
-
-                    <!-- 
                     <script>
-                        function onSuccess(googleUser) {
-                            //console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-                            console.log('Logged in as: admin');
+                        function myMap() {
+                            var mapProp = {
+                                center: new google.maps.LatLng(51.508742, -0.120850),
+                                zoom: 5,
+                            };
+                            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
                         }
-
-
-
+                    </script>
+                    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDgzJsIne7hMjjk8yGSPloiQ_FYdNr-g-g&callback=myMap"></script>
+                    <!-- <script>
+                        function onSuccess(googleUser) {
+                            console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+                            //console.log('Logged in as: admin'); 
+                        }
                         function onFailure(error) {
                             console.log(error);
                         }
@@ -117,13 +98,13 @@
                                 'onsuccess': onSuccess,
                                 'onfailure': onFailure
                             });
-                        }
-                    </script> -->
+                        }</script> -->
                     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
                     <script src="/socket.io/socket.io.js"></script>
                     <script src="index.js"></script>
 </body>
+
 
 
 </html>

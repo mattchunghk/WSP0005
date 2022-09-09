@@ -14,5 +14,6 @@
       "username": "memoadmin",
       "password": "memoadmin"
     }
-  ]
+  ],
+  "tabnine.experimentalAutoImports": true,
 }

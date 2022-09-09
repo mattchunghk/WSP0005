@@ -2,6 +2,7 @@
 console.log("js running");
 window.onload = () => {
     init();
+    load();
 };
 
 function init() {
@@ -210,7 +211,7 @@ async function logout(event) {
     event.preventDefault();
     const adminText = document.querySelector(".admin-txt");
 
-    const res = await fetch("/logout", {
+    const res = await fetch("/admin/logout", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -241,27 +242,10 @@ togglePassword.addEventListener("click", function(e) {
     this.classList.toggle("fa-eye-slash");
 });
 
-
-// else {
-//     memosContainer.innerHTML += `
-//     <div class="col-xxl-3 col-xl-4 col-lg-6 col-md-6
-//     col-sm-12 col-6">
-// <div class="memo-box-none">
-//     <div class="trash"><i class="bi bi-trash3"></i></div>
-//     <div class="write"><i class="bi
-//                 bi-pencil-square"></i></div>
-//     <div class="like"><i class="bi
-//                 bi-hand-thumbs-up"></i></div>
-
-//     <form method="post" action="">
-
-//         <div class="memo">
-//             <input type="text" class="memo-input" value="${memo.content}" onClick="this.select()">
-//             <img class="photo-img" src="/${memo.image}" alt="memo-phot">
-//         </div>
-//     </form>
-// </div>
-// </div>
-// </div>
-// </div>`;
-// }
+async function load() {
+    const adminText = document.querySelector(".admin-txt");
+    let url = 'https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=en';
+    let obj = await (await fetch(url)).json();
+    console.log(obj.soilTemp[0].value);
+    adminText.innerHTML = obj.soilTemp[0].value + "ºc"
+}
